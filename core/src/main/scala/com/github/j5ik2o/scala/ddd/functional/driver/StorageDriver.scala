@@ -1,9 +1,18 @@
 package com.github.j5ik2o.scala.ddd.functional.driver
 
-trait StorageDriver extends AggregateRepository with AggregateDeletable {
+import com.github.j5ik2o.scala.ddd.functional.Aggregate
+
+trait StorageDriver[A <: Aggregate, E[_]] {
   type RecordType
 
-  protected def convertToRecord(aggregate: AggregateType): RecordType
+  def store(aggregate: A): E[Unit]
 
-  protected def convertToAggregate(record: Option[RecordType]): Option[AggregateType]
+  def resolveBy(id: A#IdType): E[Option[A]]
+
+  def deleteById(id: A#IdType): E[Unit]
+
+  protected def convertToRecord(aggregate: A): RecordType
+
+  protected def convertToAggregate(record: Option[RecordType]): Option[A]
+
 }

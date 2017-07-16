@@ -1,16 +1,9 @@
 package com.github.j5ik2o.scala.ddd.functional.example.domain
 
 import cats.implicits._
-import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.{
-  UserSkinnyORMFutureEvaluator,
-  UserSkinnyORMFutureStorageDriver
-}
-import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3.{
-  UserSlickDBIOEvaluator,
-  UserSlickDBIOStorageDriver,
-  UserSlickFutureEvaluator,
-  UserSlickFutureStorageDriver
-}
+import com.github.j5ik2o.scala.ddd.functional.cats.driver.Evaluator
+import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.UserSkinnyORMFutureStorageDriver
+import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3._
 import com.github.j5ik2o.scala.ddd.functional.skinnyorm.{ SkinnyORMFutureIOContext, SkinnyORMSpecSupport }
 import com.github.j5ik2o.scala.ddd.functional.slick.test.FlywayWithMySQLSpecSupport
 import com.github.j5ik2o.scala.ddd.functional.slick.{ CatsDBIOImplicits, Slick3SpecSupport }
@@ -29,8 +22,9 @@ class UserRepositorySpec
   "UserRepository" - {
     "should be able to store and resolve" - {
       "when DBIO of Slick" in {
-        val driver    = UserSlickDBIOStorageDriver(dbConfig.profile, dbConfig.db)
-        val evaluator = UserSlickDBIOEvaluator(driver)
+        val driver = UserSlickDBIOStorageDriver(dbConfig.profile, dbConfig.db)
+        import driver._
+        val evaluator = Evaluator[User, driver.EvalType]()
         val program = for {
           _  <- UserRepository.store(User(UserId(1), "kato"))
           r1 <- UserRepository.resolveBy(UserId(1))
@@ -45,8 +39,8 @@ class UserRepositorySpec
         println(result)
       }
       "when Future of Slick" in {
-        val driver    = UserSlickFutureStorageDriver(dbConfig.profile, dbConfig.db)
-        val evaluator = UserSlickFutureEvaluator(driver)
+        implicit val driver = UserSlickFutureStorageDriver(dbConfig.profile, dbConfig.db)
+        val evaluator       = Evaluator[User, UserSlickFutureStorageDriver.EvalType]()
         val program = for {
           _  <- UserRepository.store(User(UserId(2), "kato"))
           r1 <- UserRepository.resolveBy(UserId(2))
@@ -58,8 +52,8 @@ class UserRepositorySpec
         println(result)
       }
       "when Future of Skinny" in {
-        val driver    = UserSkinnyORMFutureStorageDriver()
-        val evaluator = UserSkinnyORMFutureEvaluator(driver)
+        implicit val driver = UserSkinnyORMFutureStorageDriver()
+        val evaluator       = Evaluator[User, UserSkinnyORMFutureStorageDriver.EvalType]()
         val program = for {
           _  <- UserRepository.store(User(UserId(3), "kato"))
           r1 <- UserRepository.resolveBy(UserId(3))
