@@ -1,22 +1,17 @@
 package com.github.j5ik2o.scala.ddd.functional.example.domain
 
 import cats.implicits._
-import com.github.j5ik2o.scala.ddd.functional.example.domain.skinnyorm.UserSkinnyORMFutureEvaluator
-import com.github.j5ik2o.scala.ddd.functional.example.domain.slick.{ UserSlickDBIOEvaluator, UserSlickFutureEvaluator }
-import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.UserSkinnyORMFutureStorageDriver
-import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3.{
-  UserSlickDBIOStorageDriver,
-  UserSlickFutureStorageDriver
-}
-import com.github.j5ik2o.scala.ddd.functional.skinnyorm.{ SkinnyORMFutureIOContext, SkinnyORMSpecSupport }
+import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.{UserSkinnyORMFutureEvaluator, UserSkinnyORMFutureStorageDriver}
+import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3.{UserSlickDBIOEvaluator, UserSlickDBIOStorageDriver, UserSlickFutureEvaluator, UserSlickFutureStorageDriver}
+import com.github.j5ik2o.scala.ddd.functional.skinnyorm.{SkinnyORMFutureIOContext, SkinnyORMSpecSupport}
 import com.github.j5ik2o.scala.ddd.functional.slick.test.FlywayWithMySQLSpecSupport
-import com.github.j5ik2o.scala.ddd.functional.slick.{ CatsDBIOImplicits, Slick3SpecSupport }
+import com.github.j5ik2o.scala.ddd.functional.slick.{CatsDBIOImplicits, Slick3SpecSupport}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{ BeforeAndAfterAll, FreeSpec }
+import org.scalatest.{BeforeAndAfterAll, FreeSpec}
 import scalikejdbc.AutoSession
 
 class UserRepositorySpec
-    extends FreeSpec
+  extends FreeSpec
     with BeforeAndAfterAll
     with SkinnyORMSpecSupport
     with Slick3SpecSupport
@@ -26,28 +21,28 @@ class UserRepositorySpec
   "UserRepository" - {
     "should be able to store and resolve" - {
       "when DBIO of Slick" in {
-        val driver    = UserSlickDBIOStorageDriver(dbConfig.profile, dbConfig.db)
+        val driver = UserSlickDBIOStorageDriver(dbConfig.profile, dbConfig.db)
         val evaluator = UserSlickDBIOEvaluator(driver)
         val program = for {
-          _  <- UserRepository.store(User(UserId(1), "kato"))
+          _ <- UserRepository.store(User(UserId(1), "kato"))
           r1 <- UserRepository.resolveBy(UserId(1))
-          _  <- UserRepository.deleteById(UserId(1))
+          _ <- UserRepository.deleteById(UserId(1))
           r2 <- UserRepository.resolveBy(UserId(1))
         } yield (r1, r2)
         val implicits = CatsDBIOImplicits(driver.profile)
         import implicits._
-        val dbio   = evaluator.run(program).run(ec)
+        val dbio = evaluator.run(program).run(ec)
         val future = driver.db.run(dbio)
         val result = future.futureValue
         println(result)
       }
       "when Future of Slick" in {
-        val driver    = UserSlickFutureStorageDriver(dbConfig.profile, dbConfig.db)
+        val driver = UserSlickFutureStorageDriver(dbConfig.profile, dbConfig.db)
         val evaluator = UserSlickFutureEvaluator(driver)
         val program = for {
-          _  <- UserRepository.store(User(UserId(2), "kato"))
+          _ <- UserRepository.store(User(UserId(2), "kato"))
           r1 <- UserRepository.resolveBy(UserId(2))
-          _  <- UserRepository.deleteById(UserId(2))
+          _ <- UserRepository.deleteById(UserId(2))
           r2 <- UserRepository.resolveBy(UserId(2))
         } yield (r1, r2)
         val future = evaluator.run(program).run(ec)
@@ -55,15 +50,15 @@ class UserRepositorySpec
         println(result)
       }
       "when Future of Skinny" in {
-        val driver    = UserSkinnyORMFutureStorageDriver()
+        val driver = UserSkinnyORMFutureStorageDriver()
         val evaluator = UserSkinnyORMFutureEvaluator(driver)
         val program = for {
-          _  <- UserRepository.store(User(UserId(3), "kato"))
+          _ <- UserRepository.store(User(UserId(3), "kato"))
           r1 <- UserRepository.resolveBy(UserId(3))
-          _  <- UserRepository.deleteById(UserId(3))
+          _ <- UserRepository.deleteById(UserId(3))
           r2 <- UserRepository.resolveBy(UserId(3))
         } yield (r1, r2)
-        val ctx    = SkinnyORMFutureIOContext(ec, AutoSession)
+        val ctx = SkinnyORMFutureIOContext(ec, AutoSession)
         val future = evaluator.run(program).run(ctx)
         val result = future.futureValue
         println(result)
