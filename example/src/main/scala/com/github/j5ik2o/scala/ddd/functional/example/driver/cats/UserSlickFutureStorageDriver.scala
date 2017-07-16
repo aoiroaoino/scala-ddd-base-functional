@@ -1,9 +1,9 @@
-package com.github.j5ik2o.scala.ddd.functional.example.driver.slick3
+package com.github.j5ik2o.scala.ddd.functional.example.driver.cats
 
 import cats.data.Kleisli
 import com.github.j5ik2o.scala.ddd.functional.driver.StorageDriver
 import com.github.j5ik2o.scala.ddd.functional.example.domain.{ User, UserId }
-import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3.UserSlickFutureStorageDriver.EvalType
+import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3.UserDaoComponent
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -15,6 +15,7 @@ object UserSlickFutureStorageDriver {
 case class UserSlickFutureStorageDriver(profile: JdbcProfile, db: JdbcProfile#Backend#Database)
     extends StorageDriver[User, UserSlickFutureStorageDriver.EvalType]
     with UserDaoComponent {
+  import UserSlickFutureStorageDriver._
   override type RecordType = UserRecord
 
   protected val dao = UserDao

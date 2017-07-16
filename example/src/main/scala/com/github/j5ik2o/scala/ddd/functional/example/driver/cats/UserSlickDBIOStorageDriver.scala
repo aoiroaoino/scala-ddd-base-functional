@@ -1,13 +1,15 @@
-package com.github.j5ik2o.scala.ddd.functional.example.driver.slick3
+package com.github.j5ik2o.scala.ddd.functional.example.driver.cats
 
 import cats.data.Kleisli
 import com.github.j5ik2o.scala.ddd.functional.driver.StorageDriver
 import com.github.j5ik2o.scala.ddd.functional.example.domain.{ User, UserId }
+import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3.UserDaoComponent
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext
 
-case class UserSlickDBIOStorageDriver(profile: JdbcProfile, db: JdbcProfile#Backend#Database) extends UserDaoComponent {
+case class UserSlickDBIOStorageDriver(profile: JdbcProfile, db: JdbcProfile#Backend#Database)
+    extends UserDaoComponent {
 
   type EvalType[A] = Kleisli[profile.api.DBIO, ExecutionContext, A]
 

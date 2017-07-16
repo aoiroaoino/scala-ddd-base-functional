@@ -1,9 +1,9 @@
-package com.github.j5ik2o.scala.ddd.functional.cats.driver
+package com.github.j5ik2o.scala.ddd.functional.scalaz.driver
 
-import cats.free.Free
-import cats.{ ~>, Monad }
-import com.github.j5ik2o.scala.ddd.functional.driver.{ EvaluateFeature, EvaluateHardDeleteFeature, StorageDriver }
 import com.github.j5ik2o.scala.ddd.functional.{ Aggregate, AggregateRepositoryDSL }
+import com.github.j5ik2o.scala.ddd.functional.driver.{ EvaluateFeature, EvaluateHardDeleteFeature, StorageDriver }
+
+import scalaz.{ ~>, Free, Monad }
 
 trait Evaluator[M <: Aggregate, E[_]]
     extends (AggregateRepositoryDSL ~> E)

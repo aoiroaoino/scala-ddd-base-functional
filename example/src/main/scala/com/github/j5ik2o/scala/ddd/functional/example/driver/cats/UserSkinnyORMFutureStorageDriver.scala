@@ -1,9 +1,9 @@
-package com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm
+package com.github.j5ik2o.scala.ddd.functional.example.driver.cats
 
 import cats.data.Kleisli
 import com.github.j5ik2o.scala.ddd.functional.driver.StorageDriver
 import com.github.j5ik2o.scala.ddd.functional.example.domain.{ User, UserId }
-import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.UserSkinnyORMFutureStorageDriver.EvalType
+import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.{ UserDao, UserRecord }
 import com.github.j5ik2o.scala.ddd.functional.skinnyorm.SkinnyORMFutureIOContext
 import scalikejdbc.DB
 import skinny.orm.SkinnyCRUDMapperWithId
@@ -15,6 +15,7 @@ object UserSkinnyORMFutureStorageDriver {
 }
 
 case class UserSkinnyORMFutureStorageDriver() extends StorageDriver[User, UserSkinnyORMFutureStorageDriver.EvalType] {
+  import UserSkinnyORMFutureStorageDriver._
   override type RecordType = UserRecord
 
   protected val dao: SkinnyCRUDMapperWithId[Long, RecordType] = UserDao

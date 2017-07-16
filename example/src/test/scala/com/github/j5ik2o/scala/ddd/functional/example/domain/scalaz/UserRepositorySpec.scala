@@ -1,15 +1,22 @@
-package com.github.j5ik2o.scala.ddd.functional.example.domain
+package com.github.j5ik2o.scala.ddd.functional.example.domain.scalaz
 
-import cats.implicits._
-import com.github.j5ik2o.scala.ddd.functional.cats.driver.Evaluator
-import com.github.j5ik2o.scala.ddd.functional.example.driver.skinnyorm.UserSkinnyORMFutureStorageDriver
-import com.github.j5ik2o.scala.ddd.functional.example.driver.slick3._
+import com.github.j5ik2o.scala.ddd.functional.example.domain.{ User, UserId }
+import com.github.j5ik2o.scala.ddd.functional.example.driver.scalaz.{
+  UserSkinnyORMFutureStorageDriver,
+  UserSlickDBIOStorageDriver,
+  UserSlickFutureStorageDriver
+}
+import com.github.j5ik2o.scala.ddd.functional.scalaz.driver.Evaluator
 import com.github.j5ik2o.scala.ddd.functional.skinnyorm.{ SkinnyORMFutureIOContext, SkinnyORMSpecSupport }
+import com.github.j5ik2o.scala.ddd.functional.slick.Slick3SpecSupport
+import com.github.j5ik2o.scala.ddd.functional.slick.scalaz.ScalazDBIOImplicits
 import com.github.j5ik2o.scala.ddd.functional.slick.test.FlywayWithMySQLSpecSupport
-import com.github.j5ik2o.scala.ddd.functional.slick.{ CatsDBIOImplicits, Slick3SpecSupport }
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{ BeforeAndAfterAll, FreeSpec }
 import scalikejdbc.AutoSession
+
+import scalaz._
+import Scalaz._
 
 class UserRepositorySpec
     extends FreeSpec
@@ -31,7 +38,7 @@ class UserRepositorySpec
           _  <- UserRepository.deleteById(UserId(1))
           r2 <- UserRepository.resolveBy(UserId(1))
         } yield (r1, r2)
-        val implicits = CatsDBIOImplicits(driver.profile)
+        val implicits = ScalazDBIOImplicits(driver.profile)
         import implicits._
         val dbio   = evaluator.run(program).run(ec)
         val future = driver.db.run(dbio)

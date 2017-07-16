@@ -1,4 +1,4 @@
-package com.github.j5ik2o.scala.ddd.functional.slick
+package com.github.j5ik2o.scala.ddd.functional.slick.cats
 
 import cats.Monad
 import slick.jdbc.JdbcProfile

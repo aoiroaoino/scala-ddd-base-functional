@@ -69,6 +69,14 @@ lazy val cats = (project in file("cats"))
   )
   .dependsOn(core)
 
+lazy val scalaz = (project in file("scalaz"))
+  .settings(commonSettings)
+  .settings(
+    name := "scala-ddd-base-functional-scalaz",
+    libraryDependencies ++= Seq("org.scalaz" %% "scalaz-core" % "7.2.14")
+  )
+  .dependsOn(core)
+
 lazy val skinnyOrm = (project in file("skinny-orm"))
   .settings(commonSettings)
   .settings(
@@ -78,6 +86,28 @@ lazy val skinnyOrm = (project in file("skinny-orm"))
     )
   )
   .dependsOn(core, cats, test % "test->test")
+
+lazy val slickCats = (project in file("slick-cats"))
+  .settings(commonSettings)
+  .settings(
+    name := "scala-ddd-base-functional-slick-cats",
+    libraryDependencies ++= Seq(
+      "com.typesafe.slick" %% "slick"          % "3.2.0",
+      "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0"
+    )
+  )
+  .dependsOn(core, cats, test % "test->test")
+
+lazy val slickScalaz = (project in file("slick-scalaz"))
+  .settings(commonSettings)
+  .settings(
+    name := "scala-ddd-base-functional-slick-scalaz",
+    libraryDependencies ++= Seq(
+      "com.typesafe.slick" %% "slick"          % "3.2.0",
+      "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0"
+    )
+  )
+  .dependsOn(core, scalaz, test % "test->test")
 
 lazy val slick = (project in file("slick"))
   .settings(commonSettings)
@@ -93,11 +123,15 @@ lazy val slick = (project in file("slick"))
 lazy val example = (project in file("example"))
   .settings(commonSettings)
   .settings(
-    name := "scala-ddd-base-functional-example"
+    name := "scala-ddd-base-functional-example",
+    parallelExecution in Test := false
   )
   .dependsOn(core,
              cats,
-             slick     % "compile->compile;test->test",
+             scalaz,
+             slick % "compile->compile;test->test",
+             slickCats,
+             slickScalaz,
              skinnyOrm % "compile->compile;test->test",
              test      % "test->test")
 
@@ -106,4 +140,4 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala-ddd-base-functional"
   )
-  .aggregate(core, cats, slick, example)
+  .aggregate(core, cats, scalaz, slick, example)
