@@ -1,6 +1,6 @@
 package com.github.j5ik2o.scala.ddd.functional.example.driver
 
-import com.github.j5ik2o.scala.ddd.functional.cats.StorageDriver
+import com.github.j5ik2o.scala.ddd.functional.driver.StorageDriver
 import com.github.j5ik2o.scala.ddd.functional.example.domain.{ User, UserId }
 
 trait UserFutureStorageDriver extends StorageDriver {

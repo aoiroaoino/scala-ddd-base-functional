@@ -3,8 +3,7 @@ package com.github.j5ik2o.scala.ddd.functional.cats.driver
 import cats.free.Free
 import cats.{ ~>, Monad }
 import com.github.j5ik2o.scala.ddd.functional.AggregateRepositoryDSL
-import com.github.j5ik2o.scala.ddd.functional.cats.StorageDriver
-import com.github.j5ik2o.scala.ddd.functional.driver.AggregateIO
+import com.github.j5ik2o.scala.ddd.functional.driver.{ AggregateIO, StorageDriver }
 
 trait FreeIOEvaluator extends AggregateIO { self =>
   import AggregateRepositoryDSL._

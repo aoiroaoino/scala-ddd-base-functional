@@ -1,7 +1,7 @@
 package com.github.j5ik2o.scala.ddd.functional.skinnyorm
 
 import cats.data.Kleisli
-import com.github.j5ik2o.scala.ddd.functional.cats.StorageDriver
+import com.github.j5ik2o.scala.ddd.functional.driver.StorageDriver
 import scalikejdbc.DB
 import skinny.orm.SkinnyCRUDMapperWithId
 

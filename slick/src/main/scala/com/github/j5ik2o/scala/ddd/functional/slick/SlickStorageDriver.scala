@@ -1,6 +1,6 @@
 package com.github.j5ik2o.scala.ddd.functional.slick
 
-import com.github.j5ik2o.scala.ddd.functional.cats.StorageDriver
+import com.github.j5ik2o.scala.ddd.functional.driver.StorageDriver
 import slick.jdbc.JdbcProfile
 
 trait SlickStorageDriver extends StorageDriver {
