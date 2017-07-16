@@ -9,7 +9,7 @@ case class UserSkinnyORMFutureStorageDriver() extends UserFutureStorageDriver wi
   override type AggregateIdType = UserId
   override type AggregateType   = User
   override type RecordType      = UserRecord
-  override val dao = UserDao
+  override protected val dao = UserDao
 
   override protected def convertToRecord(aggregate: User): UserRecord =
     UserRecord(id = aggregate.id.value, name = aggregate.name)

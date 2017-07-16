@@ -12,7 +12,7 @@ trait SkinnyORMStorageDriver extends StorageDriver {
   override type IdValueType = Long
   override type DSL[A]      = Kleisli[Future, SkinnyORMFutureIOContext, A]
 
-  val dao: SkinnyCRUDMapperWithId[IdValueType, RecordType]
+  protected val dao: SkinnyCRUDMapperWithId[IdValueType, RecordType]
 
   private def withContext[A](body: SkinnyORMFutureIOContext => Future[A]): DSL[A] =
     Kleisli[Future, SkinnyORMFutureIOContext, A](body)
