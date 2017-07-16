@@ -7,14 +7,11 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext
 
-case class UserSlickDBIOStorageDriver(profile: JdbcProfile, db: JdbcProfile#Backend#Database)
-    extends UserDaoComponent {
-
-  implicit val internalDriver: InternalDriver = InternalDriver()
+case class UserSlickDBIOStorageDriver(profile: JdbcProfile, db: JdbcProfile#Backend#Database) extends UserDaoComponent {
 
   type EvalType[A] = Kleisli[profile.api.DBIO, ExecutionContext, A]
 
-  case class InternalDriver() extends StorageDriver[User, EvalType] {
+  implicit object InternalDriver extends StorageDriver[User, EvalType] {
     override type RecordType = UserRecord
 
     protected val dao = UserDao
